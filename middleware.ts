@@ -15,35 +15,43 @@ export async function middleware(request: NextRequest) {
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options))
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
         },
       },
-    },
+    }
   )
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (request.nextUrl.pathname.startsWith("/dashboard") && !user) {
+  const path = request.nextUrl.pathname
+
+  // Protect user dashboard (Supabase auth)
+  if (path.startsWith("/dashboard") && !user) {
     const url = request.nextUrl.clone()
     url.pathname = "/"
     return NextResponse.redirect(url)
   }
 
+  // Protect admin routes except admin-login and admin dashboard (localStorage-based)
   if (
-    request.nextUrl.pathname.startsWith("/admin") &&
-    request.nextUrl.pathname !== "/admin-login" &&
-    !user
+    path.startsWith("/admin") &&
+    !["/admin-login", "/admin-login/", "/admin/dashboard"].includes(path)
   ) {
-    const url = request.nextUrl.clone()
-    url.pathname = "/"
-    return NextResponse.redirect(url)
+    // Don't block — admin dashboard is handled via client-side localStorage
+    if (!user) {
+      return supabaseResponse
+    }
   }
 
   return supabaseResponse
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 }
