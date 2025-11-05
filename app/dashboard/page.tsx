@@ -94,8 +94,8 @@ export default function DashboardPage() {
         <Tabs value={activeCategory} onValueChange={setActiveCategory} className="mb-8">
           <TabsList>
             <TabsTrigger value="all">All Products</TabsTrigger>
-            <TabsTrigger value="medicine">Medicines</TabsTrigger>
-            <TabsTrigger value="essentials">Essentials</TabsTrigger>
+            <TabsTrigger value="Medicine">Medicines</TabsTrigger>
+            <TabsTrigger value="Essentials">Essentials</TabsTrigger>
           </TabsList>
         </Tabs>
 
