@@ -21,20 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased min-h-screen relative overflow-hidden">
+      <body className={`font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Analytics />
-
-          {/* Floating Signature Badge */}
-          <div className="fixed bottom-3 left-4 z-50">
-            <div className="bg-zinc-900/80 dark:bg-zinc-800/80 text-white px-4 py-2 rounded-full shadow-lg border border-white/10 backdrop-blur-md hover:scale-105 transition-transform duration-300 text-sm font-medium">
-              Made with <span className="text-red-500">❤️</span> by 
-              <span className="font-semibold ml-1 text-blue-400">Gaurav Chaudhary</span>
-            </div>
-          </div>
         </ThemeProvider>
+        
       </body>
     </html>
   )
 }
+
